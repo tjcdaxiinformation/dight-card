@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>西區傳教史名片設計預覽</title>
+    
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 載入 React 核心 -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- 載入 Babel (解析 JSX) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- 載入 Lucide 圖示庫 -->
+    <script src="https://unpkg.com/lucide-react"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .perspective-1000 { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .rendering-pixelated { image-rendering: pixelated; }
+    </style>
+</head>
+<body class="bg-slate-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { 
+            ShieldCheck, RefreshCw, Globe, MessageCircle, 
+            User, Monitor, Navigation, Check, Shield 
+        } = window.lucideReact;
+
+        const App = () => {
+            const [isFlipped, setIsFlipped] = useState(false);
+
+            // 官方網址資訊 - 已更新您的 Line ID
+            const qrData = {
+                uploadPage: "https://tjcdaxiinformation.github.io/TJC-West-History/",
+                leaderLine: "https://line.me/ti/p/U3XGjc8GKN", 
+                taoyuanLine: "https://line.me/ti/p/~example_ty",  
+                hsinchuLine: "https://line.me/ti/p/~example_hc",  
+                taichungLine: "https://line.me/ti/p/~example_tc",  
+                nantouLine: "https://line.me/ti/p/~example_nt"     
+            };
+
+            const RealQRCode = ({ url, label, size = 80, dark = false }) => {
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size * 2}x${size * 2}&data=${encodeURIComponent(url)}`;
+                return (
+                    <div className="flex flex-col items-center justify-center space-y-1">
+                        <div className={`bg-white border-2 ${dark ? 'border-indigo-800' : 'border-slate-100'} rounded-lg flex items-center justify-center p-1 shadow-md overflow-hidden`}>
+                            <img src={qrUrl} alt={label} style={{ width: size, height: size }} className="rendering-pixelated" />
+                        </div>
+                        <p className={`text-[7px] font-black uppercase tracking-tighter ${dark ? 'text-indigo-300' : 'text-slate-500'}`}>{label}</p>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="flex flex-col items-center justify-center min-h-screen p-4">
+                    <div className="mb-8 text-center">
+                        <h1 className="text-2xl font-black text-slate-800 mb-2">西區公關組正式名片預覽</h1>
+                        <p className="text-sm text-slate-500 font-medium">針對 5/10 資訊股宣導活動設計</p>
+                        <button 
+                            onClick={() => setIsFlipped(!isFlipped)}
+                            className="mt-4 flex items-center mx-auto gap-2 bg-indigo-900 text-white px-8 py-3 rounded-full font-black hover:bg-indigo-800 transition-all shadow-xl active:scale-95"
+                        >
+                            <RefreshCw size={18} />
+                            點擊翻轉查看{isFlipped ? '正面' : '背面'}
+                        </button>
+                    </div>
+
+                    <div className="relative w-[500px] h-[300px] perspective-1000">
+                        <div className={`relative w-full h-full transition-all duration-700 preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+                            
+                            {/* 正面：計畫宣導 */}
+                            <div className="absolute inset-0 backface-hidden bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-200 flex flex-col">
+                                <div className="h-4 bg-indigo-950 w-full flex items-center px-4">
+                                    <div className="flex gap-1">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                                    </div>
+                                </div>
+                                <div className="p-8 flex flex-col h-full relative">
+                                    <div className="mb-6">
+                                        <h2 className="text-[10px] font-black text-slate-400 leading-none mb-2 tracking-tight uppercase">TJC台灣傳教百年西區音樂會籌備會公關宣傳組</h2>
+                                        <h3 className="text-2xl font-black text-indigo-950 tracking-tighter">西區教會傳教史數位典藏計畫</h3>
+                                        <div className="h-1 w-16 bg-amber-500 mt-2 rounded-full shadow-sm"></div>
+                                    </div>
+                                    <div className="flex flex-grow gap-8 items-center">
+                                        <div className="w-3/5">
+                                            <div className="rounded-2xl border-2 border-slate-100 shadow-xl overflow-hidden bg-slate-50 relative aspect-video">
+                                                <div className="absolute inset-0 flex flex-col p-2">
+                                                    <div className="flex items-center gap-1 mb-1 border-b border-slate-200 pb-1">
+                                                        <Globe size={8} className="text-indigo-400" />
+                                                        <div className="bg-slate-200 h-1.5 w-24 rounded-full"></div>
+                                                    </div>
+                                                    <div className="flex-grow flex flex-col justify-center items-center opacity-20">
+                                                        <Monitor size={40} className="text-indigo-900" />
+                                                    </div>
+                                                </div>
+                                                <div className="absolute bottom-2 left-2 right-2 bg-indigo-900 p-2 rounded-lg text-[7px] font-black text-white truncate shadow-lg flex items-center gap-2">
+                                                    <Globe size={10} className="text-indigo-300" />
+                                                    tjcdaxiinformation.github.io/TJC-West-History/
+                                                </div>
+                                            </div>
+                                            <p className="mt-3 text-[10px] font-bold text-slate-500 leading-relaxed italic">
+                                                請資訊股協助登入網頁上傳史料，見證百年恩典。
+                                            </p>
+                                        </div>
+                                        <div className="w-2/5 flex flex-col items-center justify-center border-l border-slate-100 pl-4">
+                                            <RealQRCode url={qrData.uploadPage} label="史料上傳網頁" size={85} />
+                                            <div className="mt-3 px-4 py-1 bg-indigo-950 rounded-full shadow-md">
+                                                <p className="text-[8px] font-black text-white uppercase tracking-widest">Scan to Upload</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="absolute top-8 right-8 opacity-5">
+                                        <ShieldCheck size={80} className="text-indigo-950" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 背面：聯絡網 */}
+                            <div className="absolute inset-0 backface-hidden rotate-y-180 bg-indigo-950 rounded-[2rem] shadow-2xl overflow-hidden border border-indigo-800 flex flex-col text-white">
+                                <div className="p-8 flex flex-col h-full">
+                                    <div className="flex justify-between items-center mb-8 bg-white/5 p-5 rounded-[2rem] border border-white/10 shadow-inner">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl border-2 border-white/20">
+                                                <User size={28} />
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-bold text-indigo-300 tracking-[0.2em] uppercase mb-1">公關宣傳組 組長</p>
+                                                <h4 className="text-2xl font-black tracking-tight leading-none">王鴻志 <span className="text-xs font-normal opacity-40 ml-1 italic">Wang</span></h4>
+                                            </div>
+                                        </div>
+                                        <div className="scale-110">
+                                            <RealQRCode url={qrData.leaderLine} label="組長 LINE" size={55} dark />
+                                        </div>
+                                    </div>
+                                    <div className="text-center mb-5">
+                                        <p className="text-[10px] font-black text-indigo-400 tracking-[0.3em] uppercase">各小區公關小編聯絡網</p>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-4 flex-grow items-center">
+                                        <RealQRCode url={qrData.taoyuanLine} label="桃園小區" size={48} dark />
+                                        <RealQRCode url={qrData.hsinchuLine} label="新竹小區" size={48} dark />
+                                        <RealQRCode url={qrData.taichungLine} label="台中小區" size={48} dark />
+                                        <RealQRCode url={qrData.nantouLine} label="南投小區" size={48} dark />
+                                    </div>
+                                    <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center opacity-40">
+                                        <p className="text-[8px] font-black tracking-[0.2em]">TJC WESTERN DISTRICT CENTENNIAL</p>
+                                        <Shield size={12} />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/* 說明事項 */}
+                    <div className="mt-10 bg-white p-6 rounded-3xl shadow-lg border border-slate-200 max-w-lg">
+                        <h4 className="text-sm font-black text-indigo-900 mb-2 flex items-center gap-2">
+                             <ShieldCheck size={16} /> 印刷與使用建議
+                        </h4>
+                        <ul className="text-xs text-slate-500 space-y-2 leading-relaxed">
+                            <li>• <strong>真實掃描：</strong>畫面上所有的 QR Code 皆可直接用手機掃描測試。</li>
+                            <li>• <strong>組長 ID：</strong>已填入您提供的連結，點擊背面掃描即可直接加入您的 Line。</li>
+                            <li>• <strong>印刷規格：</strong>建議採用 300g 霧面卡加局部亮膜，這會讓名片看起來非常專業。</li>
+                        </ul>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
