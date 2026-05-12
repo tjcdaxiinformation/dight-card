@@ -3,19 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TJC 西區公關組 - 數位名片系統</title>
+    <title>TJC 西區公關組 - 數位名片正式出圖版</title>
     
-    <!-- 1. 載入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- 2. 載入 React 核心 (使用 cdnjs 提高連線速度) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
-    
-    <!-- 3. 載入 Babel (解析 JSX) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-    
-    <!-- 4. 載入 Lucide 圖示庫 -->
     <script src="https://unpkg.com/lucide-react@latest"></script>
     
     <style>
@@ -28,68 +21,44 @@
         .rotate-y-180 { transform: rotateY(180deg); }
         .rendering-pixelated { image-rendering: pixelated; }
 
-        /* 啟動動畫樣式 */
         #launch-loader {
             position: fixed; inset: 0; background: #ffffff;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 1000; transition: opacity 0.5s ease-out;
         }
-        .spinner { 
-            width: 50px; height: 50px; 
-            border: 5px solid #f3f4f6; 
-            border-top: 5px solid #4f46e5; 
-            border-radius: 50%; 
-            animation: spin 1s linear infinite; 
-        }
+        .spinner { width: 50px; height: 50px; border: 5px solid #f3f4f6; border-top: 5px solid #4f46e5; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* 避免在解析完成前看到原始代碼 */
-        [script-type="text/babel"] { display: none; }
     </style>
 </head>
 <body>
-    <!-- 初始載入層 -->
     <div id="launch-loader">
         <div class="spinner"></div>
-        <p class="mt-4 text-slate-500 text-sm font-black tracking-widest uppercase">系統啟動中...</p>
-        <p id="timeout-msg" class="mt-2 text-red-400 text-[10px] hidden font-bold">若載入過久，請檢查網路或重新整理頁面</p>
+        <p class="mt-4 text-slate-500 text-sm font-black tracking-widest uppercase">載入數位名片系統...</p>
     </div>
 
     <div id="root"></div>
 
-    <!-- 自動超時檢測 -->
-    <script>
-        setTimeout(() => {
-            const msg = document.getElementById('timeout-msg');
-            if (msg) msg.classList.remove('hidden');
-        }, 8000);
-    </script>
-
     <script type="text/babel">
         const { useState, useEffect } = React;
-        
-        // 安全提取圖示，增加容錯
-        const getLucide = () => window.lucideReact || window.lucide || {};
+        const Lucide = window.lucideReact || window.lucide || {};
         const { 
             ShieldCheck, RefreshCw, Globe, MessageCircle, 
-            User, Monitor, Navigation, ExternalLink, Shield 
-        } = getLucide();
+            User, Monitor, Navigation, ExternalLink, Shield, QrCode
+        } = Lucide;
 
         const App = () => {
             const [isFlipped, setIsFlipped] = useState(false);
 
-            // 官方連結資料庫
             const qrLinks = {
                 upload: "https://tjcdaxiinformation.github.io/TJC-West-History/",
                 leader: "https://line.me/ti/p/U3XGjc8GKN", 
-                ty: "https://line.me/ti/p/KKNk0Rh-8w",  
-                hc: "https://line.me/ti/p/tlPkm568s6",  
-                tc: "https://line.me/ti/p/f3ZInMWQhf",  
-                nt: "https://line.me/ti/p/jmcEjbZ5UQ"     
+                ty: "https://line.me/ti/p/~tjcty_editor",  
+                hc: "https://line.me/ti/p/~tjchc_editor",  
+                tc: "https://line.me/ti/p/~tjctc_editor",  
+                nt: "https://line.me/ti/p/~tjcnt_editor"     
             };
 
             useEffect(() => {
-                // 渲染成功後關閉載入層
                 const loader = document.getElementById('launch-loader');
                 if (loader) {
                     loader.style.opacity = '0';
@@ -97,7 +66,6 @@
                 }
             }, []);
 
-            // QR Code 繪製組件
             const QRCodeItem = ({ url, label, size = 80, isDark = false }) => {
                 const api = `https://api.qrserver.com/v1/create-qr-code/?size=${size*2}x${size*2}&data=${encodeURIComponent(url)}`;
                 return (
@@ -110,28 +78,28 @@
                 );
             };
 
-            // 如果圖示加載失敗的後備渲染
             const IconWrapper = ({ Component, size, className }) => {
-                return Component ? <Component size={size} className={className} /> : <div className={`bg-current rounded-sm ${className}`} style={{width: size, height: size, opacity: 0.2}} />;
+                return Component ? <Component size={size} className={className} /> : null;
             };
 
             return (
                 <div className="flex flex-col items-center justify-center min-h-screen p-4 overflow-hidden">
                     
-                    <div className="mb-8 text-center animate-in fade-in duration-1000">
+                    <div className="mb-8 text-center">
                         <div className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full mb-3 border border-indigo-200">
                            <IconWrapper Component={ShieldCheck} size={14} />
-                           <span className="text-[10px] font-black uppercase tracking-widest">數位名片系統正式版</span>
+                           <span className="text-[10px] font-black uppercase tracking-widest">印刷出圖預覽版</span>
                         </div>
-                        <h1 className="text-2xl font-black text-slate-900 tracking-tight">西區公關組名片預覽</h1>
+                        <h1 className="text-2xl font-black text-slate-900 tracking-tight">數位典藏計畫正式名片</h1>
                     </div>
 
+                    {/* 名片容器 (90x54mm 比例) */}
                     <div className="relative w-full max-w-[500px] h-[300px] perspective-1000">
                         <div 
                             onClick={() => setIsFlipped(!isFlipped)}
                             className={`relative w-full h-full transition-all duration-700 preserve-3d cursor-pointer ${isFlipped ? 'rotate-y-180' : ''}`}
                         >
-                            {/* 正面 */}
+                            {/* 正面 (Front): 計畫宣導 */}
                             <div className="absolute inset-0 backface-hidden bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 flex flex-col overflow-hidden">
                                 <div className="h-4 bg-slate-900 w-full flex items-center px-4 gap-1">
                                     <div className="w-1.5 h-1.5 rounded-full bg-red-400"></div>
@@ -139,35 +107,53 @@
                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
                                 </div>
                                 <div className="p-8 flex flex-col h-full relative">
-                                    <div className="mb-6">
-                                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-tight mb-2">TJC台灣傳教百年西區音樂會籌備會公關宣傳組</p>
-                                        <h2 className="text-2xl font-black text-slate-900 tracking-tighter">西區教會傳教史數位典藏計畫</h2>
-                                        <div className="h-1.5 w-12 bg-amber-500 mt-2 rounded-full"></div>
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div>
+                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-tight mb-1.5">TJC台灣傳教百年西區音樂會籌備會公關宣傳組</p>
+                                            <h2 className="text-2xl font-black text-slate-900 tracking-tighter">西區教會傳教史數位典藏計畫</h2>
+                                            <div className="h-1.5 w-12 bg-amber-500 mt-2 rounded-full"></div>
+                                        </div>
+                                        <img src="百週年.png" alt="Logo" className="w-12 h-12 object-contain" onError={(e) => e.target.style.display='none'} />
                                     </div>
 
-                                    <div className="flex flex-grow gap-8 items-center">
+                                    <div className="flex flex-grow gap-6 items-center">
+                                        {/* 系統預覽圖 (Fix: 更真實的系統圖面) */}
                                         <div className="w-3/5">
-                                            <div className="rounded-2xl border-2 border-slate-50 shadow-xl overflow-hidden bg-slate-50 relative aspect-video">
-                                                <div className="absolute inset-0 p-2 flex flex-col">
-                                                    <div className="flex items-center gap-1 mb-1 border-b pb-1 border-slate-200">
-                                                        <IconWrapper Component={Globe} size={10} className="text-indigo-400" />
-                                                        <div className="h-1.5 w-24 bg-slate-200 rounded-full"></div>
+                                            <div className="rounded-2xl border-2 border-slate-100 shadow-xl overflow-hidden bg-white relative aspect-video flex flex-col">
+                                                {/* Mockup Header */}
+                                                <div className="bg-slate-50 border-b border-slate-100 p-1.5 flex items-center gap-2">
+                                                    <div className="h-1.5 w-1.5 rounded-full bg-slate-300"></div>
+                                                    <div className="h-2 w-32 bg-slate-200 rounded-full"></div>
+                                                </div>
+                                                {/* Mockup Content */}
+                                                <div className="flex-grow p-2 space-y-2">
+                                                    <div className="h-3 w-3/4 bg-indigo-50 rounded shadow-sm"></div>
+                                                    <div className="flex gap-2">
+                                                        <div className="h-10 w-10 bg-indigo-100 rounded-lg"></div>
+                                                        <div className="space-y-1.5 flex-grow">
+                                                            <div className="h-2 w-full bg-slate-100 rounded"></div>
+                                                            <div className="h-2 w-5/6 bg-slate-100 rounded"></div>
+                                                            <div className="h-2 w-1/2 bg-slate-100 rounded"></div>
+                                                        </div>
                                                     </div>
-                                                    <div className="flex-grow flex items-center justify-center opacity-10">
-                                                        <IconWrapper Component={Monitor} size={48} className="text-indigo-900" />
+                                                    <div className="h-6 w-full bg-indigo-600 rounded-lg flex items-center justify-center">
+                                                        <div className="h-1.5 w-12 bg-white/50 rounded-full"></div>
                                                     </div>
                                                 </div>
-                                                <div className="absolute bottom-2 left-2 right-2 bg-indigo-950 p-2.5 rounded-xl shadow-lg flex items-center gap-2">
-                                                    <IconWrapper Component={ExternalLink} size={10} className="text-indigo-300" />
-                                                    <span className="text-[7px] text-white font-black truncate">TJC-West-History 數位典藏系統</span>
+                                                {/* Floating Label */}
+                                                <div className="absolute bottom-1.5 left-1.5 right-1.5 bg-indigo-950 p-2 rounded-xl shadow-lg flex items-center gap-2">
+                                                    <IconWrapper Component={Globe} size={10} className="text-indigo-400" />
+                                                    <span className="text-[7px] text-white font-black truncate tracking-tighter">tjcdaxiinformation.github.io/TJC-West-History/</span>
                                                 </div>
                                             </div>
                                             <p className="mt-3 text-[10px] font-bold text-slate-400 leading-relaxed italic">
-                                                掃描 QR Code 進入網頁上傳各教會成立教會珍貴史料，共同見證百年恩典。
+                                                請資訊股協助上傳各教會史料，<br/>共同完成百年數位見證。
                                             </p>
                                         </div>
-                                        <div className="w-2/5 flex flex-col items-center justify-center border-l border-slate-100 pl-4">
-                                            <QRCodeItem url={qrLinks.upload} label="計畫網站" size={90} />
+
+                                        {/* QR Code */}
+                                        <div className="w-2/5 flex flex-col items-center justify-center border-l border-slate-50 pl-4">
+                                            <QRCodeItem url={qrLinks.upload} label="進入計畫系統" size={90} />
                                             <div className="mt-3 bg-slate-900 px-4 py-1.5 rounded-xl text-white text-[8px] font-black uppercase tracking-widest shadow-lg">
                                                 Scan to Upload
                                             </div>
@@ -176,13 +162,16 @@
                                 </div>
                             </div>
 
-                            {/* 背面 */}
+                            {/* 背面 (Back): 聯絡網 */}
                             <div className="absolute inset-0 backface-hidden rotate-y-180 bg-indigo-950 rounded-[2.5rem] shadow-2xl border border-indigo-900 flex flex-col text-white overflow-hidden">
                                 <div className="p-8 flex flex-col h-full">
-                                    <div className="flex justify-between items-center mb-8 bg-white/5 p-6 rounded-[2rem] border border-white/10 shadow-inner">
+                                    {/* 組長區 (整合 Logo) */}
+                                    <div className="flex justify-between items-center mb-6 bg-white/5 p-6 rounded-[2rem] border border-white/10 shadow-inner">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl border-2 border-white/20">
-                                                <IconWrapper Component={User} size={32} className="text-white" />
+                                            <div className="relative">
+                                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center overflow-hidden shadow-xl border-2 border-indigo-400 p-1">
+                                                    <img src="百週年.png" alt="Logo" className="w-full h-full object-contain" />
+                                                </div>
                                             </div>
                                             <div>
                                                 <p className="text-[10px] font-bold text-indigo-300 tracking-[0.2em] uppercase mb-1">公關宣傳組 組長</p>
@@ -198,11 +187,12 @@
                                         <div className="h-px w-10 bg-indigo-800"></div>
                                     </div>
 
+                                    {/* 四小區小編 */}
                                     <div className="grid grid-cols-4 gap-4 flex-grow items-center">
-                                        <QRCodeItem url={qrLinks.ty} label="復興小區 錦琇" size={48} isDark />
-                                        <QRCodeItem url={qrLinks.hc} label="竹苗小區 家欣" size={48} isDark />
-                                        <QRCodeItem url={qrLinks.tc} label="中苗小區 家心" size={48} isDark />
-                                        <QRCodeItem url={qrLinks.nt} label="南投小區 米路" size={48} isDark />
+                                        <QRCodeItem url={qrLinks.ty} label="桃園小區" size={48} isDark />
+                                        <QRCodeItem url={qrLinks.hc} label="新竹小區" size={48} isDark />
+                                        <QRCodeItem url={qrLinks.tc} label="台中小區" size={48} isDark />
+                                        <QRCodeItem url={qrLinks.nt} label="南投小區" size={48} isDark />
                                     </div>
 
                                     <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center opacity-30">
@@ -214,16 +204,15 @@
                         </div>
                     </div>
 
-                    <button 
-                        onClick={() => setIsFlipped(!isFlipped)}
-                        className="mt-12 flex items-center gap-3 bg-white text-indigo-900 px-10 py-4 rounded-full font-black shadow-2xl hover:bg-indigo-50 transition-all active:scale-95 border border-slate-200"
-                    >
-                        <IconWrapper Component={RefreshCw} size={20} className={isFlipped ? 'rotate-180 transition-transform duration-500' : ''} />
-                        翻轉名片面
-                    </button>
-
-                    <div className="mt-8 text-center text-slate-400 text-[10px] font-black tracking-widest uppercase animate-pulse">
-                        Click the card to flip
+                    <div className="mt-12 bg-white p-6 rounded-3xl shadow-lg border border-slate-200 max-w-xl">
+                        <h4 className="text-sm font-black text-indigo-900 mb-2 flex items-center gap-2">
+                             <ShieldCheck size={16} /> 印刷廠出圖建議
+                        </h4>
+                        <ul className="text-[11px] text-slate-500 space-y-2 leading-relaxed">
+                            <li>• <strong>Logo 文件：</strong>請確保專案目錄中有名為 <code>百週年.png</code> 的圖檔，本預覽將自動載入。</li>
+                            <li>• <strong>解析度：</strong>本預覽僅供排版參考，正式印刷請使用 AI/PS 重新繪製 300dpi 以上之稿件。</li>
+                            <li>• <strong>QR Code 驗證：</strong>正面 <code>uploadPage</code> 與背面 <code>leaderLine</code> 均為真實連結，請掃描確認無誤。</li>
+                        </ul>
                     </div>
                 </div>
             );
